@@ -86,6 +86,10 @@ h2.sec{font-size:20px;margin:20px 0 4px}
 .pill{height:36px;padding:0 16px;border-radius:18px;background:var(--chip);font-weight:500;display:flex;align-items:center;gap:8px}
 .pill:hover{background:#e5e5e5}
 .pill.on{background:var(--chip-on);color:#fff}
+.vol{display:flex;align-items:center;gap:8px;height:36px;padding:0 14px 0 4px;border-radius:18px;background:var(--chip)}
+.vol .mute{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:18px}
+.vol .mute:hover{background:#e5e5e5}
+.vol input{width:130px;accent-color:var(--red);cursor:pointer}
 .up{display:flex;gap:8px;text-align:left;border-radius:10px;padding:2px}
 .up:hover{background:var(--hover)}
 .up .thumb{width:168px;flex:none;border-radius:8px}
@@ -145,7 +149,7 @@ h2.sec{font-size:20px;margin:20px 0 4px}
 <script>
 /* ---------- data ---------- */
 const STARTER_VERSION = 2;
-const STARTER = [{"id": "6-duQqX5ECs", "t": "Three (S1 E4)", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "IqkSbJqplpg", "t": "One, Two, Three (S1 E5)", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "fC_0LqcEsu8", "t": "Red Level One: Full Episodes 1-3", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "Bg3-OtBzvq0", "t": "Best of Series One", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "8a4sYTueSJE", "t": "Patterns and Shapes (Full Episodes)", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "Js9jVSMSD40", "t": "Learn to Add with the Numberblocks", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "dU2_HAz0vxA", "t": "Addition with the Numberblocks (30 min)", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "xp4p5a1U2OI", "t": "The Littlest Chicken Problem", "ch": "PBS KIDS", "show": "Peg + Cat", "cat": "math"}, {"id": "BlkBjxxSR5s", "t": "The Umbrella Problem", "ch": "PBS KIDS", "show": "Peg + Cat", "cat": "math"}, {"id": "LZ_JUX6_Vmg", "t": "The Slop Problem", "ch": "PBS KIDS", "show": "Peg + Cat", "cat": "math"}, {"id": "nti0GQBqMM8", "t": "Cat Counts to 20", "ch": "PBS KIDS", "show": "Peg + Cat", "cat": "math"}, {"id": "DcKZhJssKNU", "t": "Learn How to Count to 10", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "math"}, {"id": "lGHo63pPDBc", "t": "Shapes (Super Songs Episode 4)", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "math"}, {"id": "wRbXxdkAgmw", "t": "Circles Are Everywhere!", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "math"}, {"id": "LrHEikj52Kk", "t": "The Missing Shapes", "ch": "PBS KIDS", "show": "Odd Squad", "cat": "math"}, {"id": "KyV-Rrl5w7o", "t": "Blaze Learns to Measure Speed Using STEM", "ch": "Nick Jr.", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "OmkY4wMYbls", "t": "Sing Along: Friction Song", "ch": "Nick Jr.", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "xf2u6TPrJ2g", "t": "Sing Along: Force Song", "ch": "Blaze and the Monster Machines", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "jG0UkBq8HCw", "t": "Blaze Uses Magnets on Power Tires, STEM Rescues #2", "ch": "Blaze and the Monster Machines", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "eNSPoLM-mQ4", "t": "Blaze Uses Science on Power Tires, STEM Rescues", "ch": "Blaze and the Monster Machines", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "Gzb0OGuFIIc", "t": "The Driving Force (full episode)", "ch": "Blaze and the Monster Machines", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "3Q9OnNRDaZI", "t": "The Mystery of the Thing That Went and Came Back", "ch": "PBS KIDS", "show": "Peep and the Big Wide World", "cat": "science"}, {"id": "BWxUa-C5nXc", "t": "Shadow Play", "ch": "Peep and the Big Wide World", "show": "Peep and the Big Wide World", "cat": "science"}, {"id": "e3lRI9t5OJQ", "t": "Give Me a Call", "ch": "Peep and the Big Wide World", "show": "Peep and the Big Wide World", "cat": "science"}, {"id": "FDBPubHfYKU", "t": "Stick With Me", "ch": "PBS KIDS", "show": "Peep and the Big Wide World", "cat": "science"}, {"id": "6Kc9DspzXdQ", "t": "A Daring Duck", "ch": "PBS KIDS", "show": "Peep and the Big Wide World", "cat": "science"}, {"id": "bl2G5gnwidw", "t": "Don't Sink the Boat!", "ch": "Curious George Official", "show": "Curious George", "cat": "science"}, {"id": "rES2INIg-KU", "t": "What's a Magnet?", "ch": "Curious George Official", "show": "Curious George", "cat": "science"}, {"id": "XAXmyGmHb6Q", "t": "Shadow Smile!", "ch": "Jim Henson's Family Hub", "show": "Sid the Science Kid", "cat": "science"}, {"id": "qbxokgNT7Yg", "t": "How Does Heat Change Things?", "ch": "Jim Henson's Family Hub", "show": "Sid the Science Kid", "cat": "science"}, {"id": "nqVHzMI8lQg", "t": "Explore the Solar System!", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "science"}, {"id": "ZHAqT4hXnMw", "t": "We Are the Planets", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "science"}, {"id": "i235Y2HRksA", "t": "Time to Shine: The Moon Song", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "science"}, {"id": "7b2RwBYaLAU", "t": "How Do Tornadoes Form?", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "science"}, {"id": "fE9ShAaSnDE", "t": "There's No Planet Like My Planet", "ch": "PBS KIDS", "show": "Ready Jet Go!", "cat": "science"}, {"id": "jPES6Aw21HQ", "t": "I Think We're Going to Outer Space!", "ch": "PBS KIDS", "show": "Ready Jet Go!", "cat": "science"}, {"id": "IS2wymbJPCk", "t": "Colorful Ocean (60 min)", "ch": "Octonauts", "show": "Octonauts", "cat": "science"}, {"id": "5C6HFOM9ZzY", "t": "Four Colors Garage Challenge", "ch": "Vlad and Niki", "show": "Vlad and Niki", "cat": "vlad"}, {"id": "g18yfaYHTKM", "t": "Funny Stories with Toy Cars", "ch": "Vlad and Niki", "show": "Vlad and Niki", "cat": "vlad"}, {"id": "Z23c0v9Ytw8", "t": "Lightning McQueen Day", "ch": "Vlad and Niki", "show": "Vlad and Niki", "cat": "vlad"}, {"id": "QTeXc3sl9v4", "t": "Building a Three-Level House", "ch": "Vlad and Niki", "show": "Vlad and Niki", "cat": "vlad"}, {"id": "ofUB8SFY1DM", "t": "Reggaeton Numbers", "ch": "Cleo and Cuquin", "show": "Cleo & Cuquin", "cat": "cleo"}, {"id": "q9WQMiBRWFo", "t": "ABC Alphabet Song", "ch": "Cleo and Cuquin", "show": "Cleo & Cuquin", "cat": "cleo"}, {"id": "7F4coed37SI", "t": "The Race", "ch": "Cleo and Cuquin", "show": "Cleo & Cuquin", "cat": "cleo"}, {"id": "Ujyq-q1th5A", "t": "Tete's Project", "ch": "Cleo and Cuquin", "show": "Cleo & Cuquin", "cat": "cleo"}, {"id": "4uwoWzl0zYU", "t": "Kamehameha Wave", "ch": "Toei Animation", "show": "Dragon Ball", "cat": "dragonball"}, {"id": "V5rZ8B7uDa8", "t": "Kamehameha in the Demon Realm", "ch": "Toei Animation", "show": "Dragon Ball", "cat": "dragonball"}, {"id": "LppVB56XJlI", "t": "Bardock, the Father of Goku", "ch": "Toei Animation", "show": "Dragon Ball", "cat": "dragonball"}, {"id": "pyhNARwedo8", "t": "Blaze Uses Power Wheels!", "ch": "Nick Jr.", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "fws6y6CYZxU", "t": "Magnet Tires Rescues", "ch": "Blaze and the Monster Machines", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "paY6pZnXdjU", "t": "Technology and STEM Rescues", "ch": "Blaze and the Monster Machines", "show": "Blaze and the Monster Machines", "cat": "cars"}];
+const STARTER = [{"id": "6-duQqX5ECs", "t": "Three (S1 E4)", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "IqkSbJqplpg", "t": "One, Two, Three (S1 E5)", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "fC_0LqcEsu8", "t": "Red Level One: Full Episodes 1-3", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "Bg3-OtBzvq0", "t": "Best of Series One", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "8a4sYTueSJE", "t": "Patterns and Shapes (Full Episodes)", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "Js9jVSMSD40", "t": "Learn to Add with the Numberblocks", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "dU2_HAz0vxA", "t": "Addition with the Numberblocks (30 min)", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "DcKZhJssKNU", "t": "Learn How to Count to 10", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "math"}, {"id": "lGHo63pPDBc", "t": "Shapes (Super Songs Episode 4)", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "math"}, {"id": "wRbXxdkAgmw", "t": "Circles Are Everywhere!", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "math"}, {"id": "KyV-Rrl5w7o", "t": "Blaze Learns to Measure Speed Using STEM", "ch": "Nick Jr.", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "OmkY4wMYbls", "t": "Sing Along: Friction Song", "ch": "Nick Jr.", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "xf2u6TPrJ2g", "t": "Sing Along: Force Song", "ch": "Blaze and the Monster Machines", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "jG0UkBq8HCw", "t": "Blaze Uses Magnets on Power Tires, STEM Rescues #2", "ch": "Blaze and the Monster Machines", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "eNSPoLM-mQ4", "t": "Blaze Uses Science on Power Tires, STEM Rescues", "ch": "Blaze and the Monster Machines", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "Gzb0OGuFIIc", "t": "The Driving Force (full episode)", "ch": "Blaze and the Monster Machines", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "3Q9OnNRDaZI", "t": "The Mystery of the Thing That Went and Came Back", "ch": "PBS KIDS", "show": "Peep and the Big Wide World", "cat": "science"}, {"id": "BWxUa-C5nXc", "t": "Shadow Play", "ch": "Peep and the Big Wide World", "show": "Peep and the Big Wide World", "cat": "science"}, {"id": "e3lRI9t5OJQ", "t": "Give Me a Call", "ch": "Peep and the Big Wide World", "show": "Peep and the Big Wide World", "cat": "science"}, {"id": "FDBPubHfYKU", "t": "Stick With Me", "ch": "PBS KIDS", "show": "Peep and the Big Wide World", "cat": "science"}, {"id": "6Kc9DspzXdQ", "t": "A Daring Duck", "ch": "PBS KIDS", "show": "Peep and the Big Wide World", "cat": "science"}, {"id": "bl2G5gnwidw", "t": "Don't Sink the Boat!", "ch": "Curious George Official", "show": "Curious George", "cat": "science"}, {"id": "rES2INIg-KU", "t": "What's a Magnet?", "ch": "Curious George Official", "show": "Curious George", "cat": "science"}, {"id": "XAXmyGmHb6Q", "t": "Shadow Smile!", "ch": "Jim Henson's Family Hub", "show": "Sid the Science Kid", "cat": "science"}, {"id": "qbxokgNT7Yg", "t": "How Does Heat Change Things?", "ch": "Jim Henson's Family Hub", "show": "Sid the Science Kid", "cat": "science"}, {"id": "nqVHzMI8lQg", "t": "Explore the Solar System!", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "science"}, {"id": "ZHAqT4hXnMw", "t": "We Are the Planets", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "science"}, {"id": "i235Y2HRksA", "t": "Time to Shine: The Moon Song", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "science"}, {"id": "7b2RwBYaLAU", "t": "How Do Tornadoes Form?", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "science"}, {"id": "IS2wymbJPCk", "t": "Colorful Ocean (60 min)", "ch": "Octonauts", "show": "Octonauts", "cat": "science"}, {"id": "5C6HFOM9ZzY", "t": "Four Colors Garage Challenge", "ch": "Vlad and Niki", "show": "Vlad and Niki", "cat": "vlad"}, {"id": "g18yfaYHTKM", "t": "Funny Stories with Toy Cars", "ch": "Vlad and Niki", "show": "Vlad and Niki", "cat": "vlad"}, {"id": "Z23c0v9Ytw8", "t": "Lightning McQueen Day", "ch": "Vlad and Niki", "show": "Vlad and Niki", "cat": "vlad"}, {"id": "QTeXc3sl9v4", "t": "Building a Three-Level House", "ch": "Vlad and Niki", "show": "Vlad and Niki", "cat": "vlad"}, {"id": "ofUB8SFY1DM", "t": "Reggaeton Numbers", "ch": "Cleo and Cuquin", "show": "Cleo & Cuquin", "cat": "cleo"}, {"id": "q9WQMiBRWFo", "t": "ABC Alphabet Song", "ch": "Cleo and Cuquin", "show": "Cleo & Cuquin", "cat": "cleo"}, {"id": "7F4coed37SI", "t": "The Race", "ch": "Cleo and Cuquin", "show": "Cleo & Cuquin", "cat": "cleo"}, {"id": "Ujyq-q1th5A", "t": "Tete's Project", "ch": "Cleo and Cuquin", "show": "Cleo & Cuquin", "cat": "cleo"}, {"id": "4uwoWzl0zYU", "t": "Kamehameha Wave", "ch": "Toei Animation", "show": "Dragon Ball", "cat": "dragonball"}, {"id": "V5rZ8B7uDa8", "t": "Kamehameha in the Demon Realm", "ch": "Toei Animation", "show": "Dragon Ball", "cat": "dragonball"}, {"id": "LppVB56XJlI", "t": "Bardock, the Father of Goku", "ch": "Toei Animation", "show": "Dragon Ball", "cat": "dragonball"}, {"id": "pyhNARwedo8", "t": "Blaze Uses Power Wheels!", "ch": "Nick Jr.", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "fws6y6CYZxU", "t": "Magnet Tires Rescues", "ch": "Blaze and the Monster Machines", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "paY6pZnXdjU", "t": "Technology and STEM Rescues", "ch": "Blaze and the Monster Machines", "show": "Blaze and the Monster Machines", "cat": "cars"}];
 
 const CATS = [
   {k:"home", label:"Home", ico:"⌂"},
@@ -162,6 +166,8 @@ const SHOW_COLOR = {"Numberblocks":"#e53935","Peg + Cat":"#8e24aa","StoryBots":"
   "Sid the Science Kid":"#00897b","Ready Jet Go!":"#3949ab","Octonauts":"#0277bd","Vlad and Niki":"#d81b60",
   "Cleo & Cuquin":"#ec407a","Dragon Ball":"#ff8f00"};
 const BLOCKED = /rachel|blippi/i;
+/* not available in Brazil (PBS KIDS uploads) */
+const DEAD = new Set(["xp4p5a1U2OI", "BlkBjxxSR5s", "LZ_JUX6_Vmg", "nti0GQBqMM8", "LrHEikj52Kk", "fE9ShAaSnDE", "jPES6Aw21HQ"]);
 
 /* ---------- storage ---------- */
 const KEY = "fifiltube.v2";
@@ -175,7 +181,7 @@ function load(){
       if(old.prog && typeof old.prog==="object") s.prog=old.prog;
     }
   }
-  s.videos = s.videos.filter(v=>!BLOCKED.test(v.t+" "+v.ch+" "+(v.show||"")));
+  s.videos = s.videos.filter(v=>!DEAD.has(v.id) && !BLOCKED.test(v.t+" "+v.ch+" "+(v.show||"")));
   return s;
 }
 let state = load();
@@ -268,6 +274,7 @@ function renderWatch(id){
       <div class="wt">${esc(v.t)}</div>
       <div class="wbar">
         <div class="wch"><div class="chav" style="background:${color(v)}">${esc(v.show[0])}</div><b>${esc(v.show)}</b></div>
+        <div class="vol"><button class="mute" id="mute" aria-label="Mute">🔊</button><input type="range" id="vol" min="0" max="100" step="5" aria-label="Volume"></div>
         <button class="pill ${liked?"on":""}" id="like">👍 ${liked?"Liked":"Like"}</button>
       </div>
     </div>
@@ -283,6 +290,7 @@ function renderWatch(id){
     state.liked = on? state.liked.filter(x=>x!==id) : [id,...state.liked]; save();
     $("#like").classList.toggle("on",!on); $("#like").textContent = on?"👍 Like":"👍 Liked";
   };
+  wireVol();
   startPlayer(v, nx);
 }
 
@@ -309,6 +317,22 @@ function showCover(kind, v, nx){
   }
   c.hidden=false;
 }
+/* volume (remembered on this device) */
+const VOLKEY="fifiltube.vol";
+function getVol(){ try{ const o=JSON.parse(localStorage.getItem(VOLKEY)); if(o&&typeof o.v==="number") return o; }catch(e){} return {v:80,m:false}; }
+function setVol(o){ try{ localStorage.setItem(VOLKEY, JSON.stringify(o)); }catch(e){} }
+function applyVol(){
+  const o=getVol(), r=$("#vol"), b=$("#mute");
+  if(r) r.value=o.v;
+  if(b){ b.textContent = o.m||o.v===0 ? "🔇" : o.v<40 ? "🔉" : "🔊"; b.setAttribute("aria-label", o.m?"Unmute":"Mute"); }
+  if(player&&player.setVolume){ player.setVolume(o.v); if(o.m||o.v===0) player.mute(); else player.unMute(); }
+}
+function wireVol(){
+  const r=$("#vol"), b=$("#mute"); if(!r) return;
+  r.oninput=()=>{ setVol({v:+r.value, m:false}); applyVol(); };
+  b.onclick=()=>{ const o=getVol(); if(o.v===0) o.v=50; o.m=!o.m; setVol(o); applyVol(); };
+  applyVol();
+}
 function hideCover(){ const c=$("#cover"); if(c) c.hidden=true; }
 
 function startPlayer(v, nx){
@@ -325,7 +349,16 @@ function startPlayer(v, nx){
         else if(e.data===2) showCover("paused",v,nx);
         else if(e.data===0){ state.prog[v.id]={t:0,d:0}; save(); showCover("ended",v,nx); }
       },
-      onError:()=>showCover("oops",v,nx)
+      onReady:()=>applyVol(),
+      onError:e=>{
+        // 100 = removed/private, 101/150 = owner blocked embedding or not available here
+        if([100,101,150].includes(e.data)){
+          state.videos=state.videos.filter(x=>x.id!==v.id); save();
+          const next=nx.find(x=>x.id!==v.id && byId(x.id));
+          if(next){ toast("Esse não funciona aqui. Indo para o próximo..."); setTimeout(()=>go("watch",next.id),800); return; }
+        }
+        showCover("oops",v,nx);
+      }
     }
   });
   tick=setInterval(()=>{
@@ -419,7 +452,7 @@ function openParents(){
   $("#fs").onclick=()=>{ const r=document.documentElement.requestFullscreen; if(r) document.documentElement.requestFullscreen().catch(()=>toast("O navegador não deixou entrar em tela cheia.")); close(); };
   $("#restore").onclick=()=>{ $("#confirmRow").hidden=false; };
   $("#restoreNo").onclick=()=>{ $("#confirmRow").hidden=true; };
-  $("#restoreYes").onclick=()=>{ state.videos=STARTER.slice(); save(); toast("Lista inicial restaurada."); openParents(); };
+  $("#restoreYes").onclick=()=>{ state.videos=STARTER.filter(v=>!DEAD.has(v.id)); save(); toast("Lista inicial restaurada."); openParents(); };
 }
 
 renderBrowse();
