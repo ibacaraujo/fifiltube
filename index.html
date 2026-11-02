@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FifilTube</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='2' y='12' width='60' height='42' rx='12' fill='%23FF0033'/%3E%3Cpath d='M26 22l18 11-18 11z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+<style>
+:root{
+  --bg:#ffffff; --fg:#0f0f0f; --muted:#606060; --line:#e5e5e5; --chip:#f2f2f2; --chip-on:#0f0f0f;
+  --hover:#f2f2f2; --red:#ff0033; --cover:rgba(15,15,15,.92);
+  --font:"Roboto","Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:14px}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #065fd4;outline-offset:2px}
+[hidden]{display:none!important}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:20;height:56px;display:flex;align-items:center;gap:16px;padding:0 16px;background:var(--bg)}
+.burger{width:40px;height:40px;border-radius:50%;display:grid;place-items:center}
+.burger:hover{background:var(--hover)}
+.logo{display:flex;align-items:center;gap:4px;font-weight:700;font-size:20px;letter-spacing:-.6px}
+.logo svg{width:30px;height:21px}
+.logo small{font-size:10px;color:var(--muted);font-weight:400;align-self:flex-start;margin-top:4px}
+.spacer{flex:1}
+.gear{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;position:relative;color:var(--muted)}
+.gear:hover{background:var(--hover)}
+.gear .ring{position:absolute;inset:0;border-radius:50%;border:3px solid var(--red);clip-path:inset(0 100% 0 0);transition:none}
+.gear.holding .ring{clip-path:inset(0 0 0 0);transition:clip-path 1.5s linear}
+.avatar{width:32px;height:32px;border-radius:50%;background:#2e7d32;color:#fff;display:grid;place-items:center;font-weight:500}
+
+/* layout */
+.shell{display:flex}
+.side{width:220px;flex:none;padding:12px;position:sticky;top:56px;height:calc(100vh - 56px);overflow:auto}
+.side.mini{width:76px}
+.side.mini .lbl,.side.mini h4,.side.mini hr{display:none}
+.side.mini .nav{flex-direction:column;gap:4px;padding:14px 0;font-size:10px;justify-content:center}
+.nav{display:flex;align-items:center;gap:20px;width:100%;padding:0 12px;height:40px;border-radius:10px;text-align:left}
+.nav:hover{background:var(--hover)}
+.nav.on{background:var(--chip);font-weight:500}
+.nav .ico{width:24px;height:24px;display:grid;place-items:center;font-size:18px;flex:none}
+.side hr{border:0;border-top:1px solid var(--line);margin:12px 0}
+.side h4{margin:4px 12px 6px;font-size:16px;font-weight:500}
+main{flex:1;min-width:0;padding:0 24px 40px}
+
+.chips{position:sticky;top:56px;z-index:10;background:var(--bg);display:flex;gap:12px;padding:12px 0;overflow-x:auto;scrollbar-width:none}
+.chip{flex:none;height:32px;padding:0 12px;border-radius:8px;background:var(--chip);font-weight:500}
+.chip:hover{background:#e5e5e5}
+.chip.on{background:var(--chip-on);color:#fff}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:40px 16px;padding-top:12px}
+.card{text-align:left;display:flex;flex-direction:column;gap:12px}
+.thumb{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:var(--chip);max-width:100%}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .2s}
+.card:hover .thumb img{transform:scale(1.03)}
+.prog{position:absolute;left:0;bottom:0;height:4px;background:var(--red)}
+.meta{display:flex;gap:12px}
+.chav{width:36px;height:36px;border-radius:50%;flex:none;display:grid;place-items:center;color:#fff;font-weight:700;font-size:15px}
+.mt{font-size:16px;font-weight:500;line-height:22px;margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ms{color:var(--muted);margin-top:4px;line-height:20px}
+.empty{color:var(--muted);padding:60px 0;font-size:16px}
+h2.sec{font-size:20px;margin:20px 0 4px}
+
+/* watch */
+.watch{display:flex;gap:24px;padding-top:24px}
+.wl{flex:1;min-width:0}
+.wr{width:400px;flex:none;display:flex;flex-direction:column;gap:8px}
+.player{position:relative;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden}
+.player #yt,.player iframe{position:absolute;inset:0;width:100%;height:100%}
+.cover{position:absolute;inset:0;background:var(--cover);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px;text-align:center}
+.cover .big{width:96px;height:96px;border-radius:50%;background:var(--red);display:grid;place-items:center}
+.cover h3{margin:0;font-size:22px;font-weight:500}
+.cover .row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+.cover .nx{width:200px;text-align:left;color:#fff}
+.cover .nx img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;display:block}
+.cover .nx span{display:block;margin-top:6px;font-weight:500;line-height:18px}
+.wt{font-size:20px;font-weight:700;margin:12px 0 8px;line-height:28px}
+.wbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.wch{display:flex;align-items:center;gap:12px;margin-right:auto}
+.wch b{font-size:16px;font-weight:500}
+.pill{height:36px;padding:0 16px;border-radius:18px;background:var(--chip);font-weight:500;display:flex;align-items:center;gap:8px}
+.pill:hover{background:#e5e5e5}
+.pill.on{background:var(--chip-on);color:#fff}
+.up{display:flex;gap:8px;text-align:left;border-radius:10px;padding:2px}
+.up:hover{background:var(--hover)}
+.up .thumb{width:168px;flex:none;border-radius:8px}
+.up .mt{font-size:14px;line-height:20px}
+.up .ms{font-size:12px;line-height:18px;margin-top:2px}
+
+/* parents */
+.dlg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;display:grid;place-items:center;padding:16px}
+.panel{background:var(--bg);border-radius:14px;width:min(760px,100%);max-height:90vh;overflow:auto;padding:24px}
+.panel h3{margin:0 0 4px;font-size:20px}
+.panel h4{margin:22px 0 8px;font-size:15px}
+.panel .hint{color:var(--muted);margin:6px 0 0;line-height:20px}
+.frow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.frow input,.frow select{height:36px;border:1px solid var(--line);border-radius:8px;padding:0 10px;font:inherit;background:var(--bg);color:var(--fg)}
+.frow input[type=text]{flex:1;min-width:200px}
+.btn{height:36px;padding:0 14px;border-radius:18px;background:var(--fg);color:var(--bg);font-weight:500}
+.btn.ghost{background:var(--chip);color:var(--fg)}
+.btn.warn{background:#c00;color:#fff}
+.list{border:1px solid var(--line);border-radius:10px;max-height:300px;overflow:auto}
+.li{display:flex;align-items:center;gap:10px;padding:6px 10px;border-top:1px solid var(--line)}
+.li:first-child{border-top:0}
+.li img{width:64px;border-radius:4px;aspect-ratio:16/9;object-fit:cover}
+.li .tx{flex:1;min-width:0;line-height:18px}
+.li .tx small{color:var(--muted)}
+.x{width:30px;height:30px;border-radius:50%;color:var(--muted)}
+.x:hover{background:var(--hover);color:#c00}
+.toast{position:fixed;left:16px;bottom:16px;background:#0f0f0f;color:#fff;padding:12px 16px;border-radius:8px;z-index:60}
+
+@media (max-width:1100px){.watch{flex-direction:column}.wr{width:auto}}
+@media (max-width:800px){.side{display:none}main{padding:0 16px 32px}}
+@media (prefers-reduced-motion:reduce){.card:hover .thumb img{transform:none}.gear.holding .ring{transition:none}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <button class="burger" id="burger" aria-label="Menu"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2"/></svg></button>
+  <button class="logo" id="logo" aria-label="Home">
+    <svg viewBox="0 0 30 21"><rect width="30" height="21" rx="5" fill="#FF0033"/><path d="M12 6l8 4.5-8 4.5z" fill="#fff"/></svg>
+    FifilTube<small>BR</small>
+  </button>
+  <div class="spacer"></div>
+  <button class="gear" id="gear" title="Pais: segure para abrir" aria-label="Parents (press and hold)">
+    <span class="ring"></span>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7 7 0 0 0-1.7-1L15 3h-4l-.3 2.9a7 7 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.5 7.5 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7 7 0 0 0 1.7 1L11 21h4l.3-2.9a7 7 0 0 0 1.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" transform="translate(-1 0)"/></svg>
+  </button>
+  <div class="avatar" aria-hidden="true">F</div>
+</header>
+
+<div class="shell">
+  <nav class="side" id="side"></nav>
+  <main id="main"></main>
+</div>
+
+<div class="dlg" id="dlg" hidden></div>
+
+<script>
+/* ---------- data ---------- */
+const STARTER_VERSION = 2;
+const STARTER = [{"id": "6-duQqX5ECs", "t": "Three (S1 E4)", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "IqkSbJqplpg", "t": "One, Two, Three (S1 E5)", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "fC_0LqcEsu8", "t": "Red Level One: Full Episodes 1-3", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "Bg3-OtBzvq0", "t": "Best of Series One", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "8a4sYTueSJE", "t": "Patterns and Shapes (Full Episodes)", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "Js9jVSMSD40", "t": "Learn to Add with the Numberblocks", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "dU2_HAz0vxA", "t": "Addition with the Numberblocks (30 min)", "ch": "Numberblocks", "show": "Numberblocks", "cat": "math"}, {"id": "xp4p5a1U2OI", "t": "The Littlest Chicken Problem", "ch": "PBS KIDS", "show": "Peg + Cat", "cat": "math"}, {"id": "BlkBjxxSR5s", "t": "The Umbrella Problem", "ch": "PBS KIDS", "show": "Peg + Cat", "cat": "math"}, {"id": "LZ_JUX6_Vmg", "t": "The Slop Problem", "ch": "PBS KIDS", "show": "Peg + Cat", "cat": "math"}, {"id": "nti0GQBqMM8", "t": "Cat Counts to 20", "ch": "PBS KIDS", "show": "Peg + Cat", "cat": "math"}, {"id": "DcKZhJssKNU", "t": "Learn How to Count to 10", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "math"}, {"id": "lGHo63pPDBc", "t": "Shapes (Super Songs Episode 4)", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "math"}, {"id": "wRbXxdkAgmw", "t": "Circles Are Everywhere!", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "math"}, {"id": "LrHEikj52Kk", "t": "The Missing Shapes", "ch": "PBS KIDS", "show": "Odd Squad", "cat": "math"}, {"id": "KyV-Rrl5w7o", "t": "Blaze Learns to Measure Speed Using STEM", "ch": "Nick Jr.", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "OmkY4wMYbls", "t": "Sing Along: Friction Song", "ch": "Nick Jr.", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "xf2u6TPrJ2g", "t": "Sing Along: Force Song", "ch": "Blaze and the Monster Machines", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "jG0UkBq8HCw", "t": "Blaze Uses Magnets on Power Tires, STEM Rescues #2", "ch": "Blaze and the Monster Machines", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "eNSPoLM-mQ4", "t": "Blaze Uses Science on Power Tires, STEM Rescues", "ch": "Blaze and the Monster Machines", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "Gzb0OGuFIIc", "t": "The Driving Force (full episode)", "ch": "Blaze and the Monster Machines", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "3Q9OnNRDaZI", "t": "The Mystery of the Thing That Went and Came Back", "ch": "PBS KIDS", "show": "Peep and the Big Wide World", "cat": "science"}, {"id": "BWxUa-C5nXc", "t": "Shadow Play", "ch": "Peep and the Big Wide World", "show": "Peep and the Big Wide World", "cat": "science"}, {"id": "e3lRI9t5OJQ", "t": "Give Me a Call", "ch": "Peep and the Big Wide World", "show": "Peep and the Big Wide World", "cat": "science"}, {"id": "FDBPubHfYKU", "t": "Stick With Me", "ch": "PBS KIDS", "show": "Peep and the Big Wide World", "cat": "science"}, {"id": "6Kc9DspzXdQ", "t": "A Daring Duck", "ch": "PBS KIDS", "show": "Peep and the Big Wide World", "cat": "science"}, {"id": "bl2G5gnwidw", "t": "Don't Sink the Boat!", "ch": "Curious George Official", "show": "Curious George", "cat": "science"}, {"id": "rES2INIg-KU", "t": "What's a Magnet?", "ch": "Curious George Official", "show": "Curious George", "cat": "science"}, {"id": "XAXmyGmHb6Q", "t": "Shadow Smile!", "ch": "Jim Henson's Family Hub", "show": "Sid the Science Kid", "cat": "science"}, {"id": "qbxokgNT7Yg", "t": "How Does Heat Change Things?", "ch": "Jim Henson's Family Hub", "show": "Sid the Science Kid", "cat": "science"}, {"id": "nqVHzMI8lQg", "t": "Explore the Solar System!", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "science"}, {"id": "ZHAqT4hXnMw", "t": "We Are the Planets", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "science"}, {"id": "i235Y2HRksA", "t": "Time to Shine: The Moon Song", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "science"}, {"id": "7b2RwBYaLAU", "t": "How Do Tornadoes Form?", "ch": "Netflix Jr.", "show": "StoryBots", "cat": "science"}, {"id": "fE9ShAaSnDE", "t": "There's No Planet Like My Planet", "ch": "PBS KIDS", "show": "Ready Jet Go!", "cat": "science"}, {"id": "jPES6Aw21HQ", "t": "I Think We're Going to Outer Space!", "ch": "PBS KIDS", "show": "Ready Jet Go!", "cat": "science"}, {"id": "IS2wymbJPCk", "t": "Colorful Ocean (60 min)", "ch": "Octonauts", "show": "Octonauts", "cat": "science"}, {"id": "5C6HFOM9ZzY", "t": "Four Colors Garage Challenge", "ch": "Vlad and Niki", "show": "Vlad and Niki", "cat": "vlad"}, {"id": "g18yfaYHTKM", "t": "Funny Stories with Toy Cars", "ch": "Vlad and Niki", "show": "Vlad and Niki", "cat": "vlad"}, {"id": "Z23c0v9Ytw8", "t": "Lightning McQueen Day", "ch": "Vlad and Niki", "show": "Vlad and Niki", "cat": "vlad"}, {"id": "QTeXc3sl9v4", "t": "Building a Three-Level House", "ch": "Vlad and Niki", "show": "Vlad and Niki", "cat": "vlad"}, {"id": "ofUB8SFY1DM", "t": "Reggaeton Numbers", "ch": "Cleo and Cuquin", "show": "Cleo & Cuquin", "cat": "cleo"}, {"id": "q9WQMiBRWFo", "t": "ABC Alphabet Song", "ch": "Cleo and Cuquin", "show": "Cleo & Cuquin", "cat": "cleo"}, {"id": "7F4coed37SI", "t": "The Race", "ch": "Cleo and Cuquin", "show": "Cleo & Cuquin", "cat": "cleo"}, {"id": "Ujyq-q1th5A", "t": "Tete's Project", "ch": "Cleo and Cuquin", "show": "Cleo & Cuquin", "cat": "cleo"}, {"id": "4uwoWzl0zYU", "t": "Kamehameha Wave", "ch": "Toei Animation", "show": "Dragon Ball", "cat": "dragonball"}, {"id": "V5rZ8B7uDa8", "t": "Kamehameha in the Demon Realm", "ch": "Toei Animation", "show": "Dragon Ball", "cat": "dragonball"}, {"id": "LppVB56XJlI", "t": "Bardock, the Father of Goku", "ch": "Toei Animation", "show": "Dragon Ball", "cat": "dragonball"}, {"id": "pyhNARwedo8", "t": "Blaze Uses Power Wheels!", "ch": "Nick Jr.", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "fws6y6CYZxU", "t": "Magnet Tires Rescues", "ch": "Blaze and the Monster Machines", "show": "Blaze and the Monster Machines", "cat": "cars"}, {"id": "paY6pZnXdjU", "t": "Technology and STEM Rescues", "ch": "Blaze and the Monster Machines", "show": "Blaze and the Monster Machines", "cat": "cars"}];
+
+const CATS = [
+  {k:"home", label:"Home", ico:"⌂"},
+  {k:"math", label:"Math", ico:"①"},
+  {k:"science", label:"Science", ico:"✦"},
+  {k:"cars", label:"Cars", ico:"🚗"},
+  {k:"vlad", label:"Vlad and Niki", ico:"★"},
+  {k:"cleo", label:"Cleo & Cuquin", ico:"♪"},
+  {k:"dragonball", label:"Dragon Ball", ico:"◉"},
+];
+const CAT_PT = {math:"Matemática",science:"Ciência e física",cars:"Carros",vlad:"Vlad and Niki",cleo:"Cleo & Cuquin",dragonball:"Dragon Ball"};
+const SHOW_COLOR = {"Numberblocks":"#e53935","Peg + Cat":"#8e24aa","StoryBots":"#1e88e5","Odd Squad":"#43a047",
+  "Blaze and the Monster Machines":"#f4511e","Peep and the Big Wide World":"#fbc02d","Curious George":"#6d4c41",
+  "Sid the Science Kid":"#00897b","Ready Jet Go!":"#3949ab","Octonauts":"#0277bd","Vlad and Niki":"#d81b60",
+  "Cleo & Cuquin":"#ec407a","Dragon Ball":"#ff8f00"};
+const BLOCKED = /rachel|blippi/i;
+
+/* ---------- storage ---------- */
+const KEY = "fifiltube.v2";
+function load(){
+  let s=null; try{ s=JSON.parse(localStorage.getItem(KEY)); }catch(e){}
+  if(!s || s.version!==STARTER_VERSION){
+    let old=null; try{ old=JSON.parse(localStorage.getItem("fifiltube")); }catch(e){}
+    s = {version:STARTER_VERSION, videos:STARTER.slice(), minutes:0, liked:[], history:[], prog:{}};
+    if(s && old){ // keep likes/history/progress from the first version if present
+      ["liked","history"].forEach(k=>{ if(Array.isArray(old[k])) s[k]=old[k]; });
+      if(old.prog && typeof old.prog==="object") s.prog=old.prog;
+    }
+  }
+  s.videos = s.videos.filter(v=>!BLOCKED.test(v.t+" "+v.ch+" "+(v.show||"")));
+  return s;
+}
+let state = load();
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+save();
+const dayKey = ()=> "fifiltube.used."+new Date().toISOString().slice(0,10);
+function getUsed(){ try{ return +localStorage.getItem(dayKey())||0 }catch(e){ return 0 } }
+function addUsed(sec){ try{ localStorage.setItem(dayKey(), getUsed()+sec) }catch(e){} }
+const timeIsUp = ()=> state.minutes>0 && getUsed() >= state.minutes*60;
+
+/* ---------- helpers ---------- */
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const thumbUrl = id=>`https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+const byId = id=>state.videos.find(v=>v.id===id);
+const color = v=>SHOW_COLOR[v.show]||"#546e7a";
+function progPct(id){ const p=state.prog[id]; return p&&p.d ? Math.min(100, p.t/p.d*100) : 0 }
+function toast(msg){ const t=document.createElement("div"); t.className="toast"; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),2200) }
+
+/* Home mixes learning and favorites: two learning videos, then one favorite. */
+function homeFeed(){
+  const learn = state.videos.filter(v=>["math","science","cars"].includes(v.cat));
+  const fav = state.videos.filter(v=>!["math","science","cars"].includes(v.cat));
+  // interleave shows inside "learn" so the same show does not repeat in a row
+  const groups={}; learn.forEach(v=>(groups[v.show]=groups[v.show]||[]).push(v));
+  const order=[]; let any=true;
+  while(any){ any=false; for(const g of Object.values(groups)){ if(g.length){ order.push(g.shift()); any=true; } } }
+  const out=[]; let i=0,j=0;
+  while(i<order.length||j<fav.length){
+    if(i<order.length) out.push(order[i++]);
+    if(i<order.length) out.push(order[i++]);
+    if(j<fav.length) out.push(fav[j++]);
+  }
+  return out;
+}
+function listFor(cat){
+  if(cat==="home") return homeFeed();
+  if(cat==="history") return state.history.map(byId).filter(Boolean);
+  if(cat==="liked") return state.liked.map(byId).filter(Boolean);
+  return state.videos.filter(v=>v.cat===cat);
+}
+
+/* ---------- views ---------- */
+let view = {name:"browse", cat:"home"};
+let player=null, tick=null;
+
+function renderSide(){
+  const item=(k,label,ico)=>`<button class="nav ${view.name==="browse"&&view.cat===k?"on":""}" data-cat="${k}"><span class="ico">${ico}</span><span class="lbl">${label}</span></button>`;
+  $("#side").innerHTML =
+    CATS.map(c=>item(c.k,c.label,c.ico)).join("") +
+    `<hr><h4>You</h4>` + item("history","History","↺") + item("liked","Liked videos","♥");
+}
+function card(v){
+  const p=progPct(v.id);
+  return `<button class="card" data-id="${v.id}">
+    <div class="thumb"><img loading="lazy" src="${thumbUrl(v.id)}" alt="">${p>2?`<div class="prog" style="width:${p}%"></div>`:""}</div>
+    <div class="meta"><div class="chav" style="background:${color(v)}">${esc(v.show[0])}</div>
+      <div><p class="mt">${esc(v.t)}</p><div class="ms">${esc(v.show)}</div></div></div>
+  </button>`;
+}
+function renderBrowse(){
+  stopPlayer();
+  const cat=view.cat;
+  const chips = CATS.map(c=>`<button class="chip ${cat===c.k?"on":""}" data-cat="${c.k}">${c.k==="home"?"All":c.label}</button>`).join("");
+  const vids = listFor(cat);
+  const title = cat==="history"?"History":cat==="liked"?"Liked videos":"";
+  $("#main").innerHTML = (title?`<h2 class="sec">${title}</h2>`:`<div class="chips">${chips}</div>`) +
+    (timeIsUp()? `<div class="empty">All done for today. See you tomorrow!</div>` :
+     vids.length? `<div class="grid">${vids.map(card).join("")}</div>` :
+     `<div class="empty">${cat==="liked"?"Tap the thumbs-up on a video and it will show up here.":"Nothing here yet."}</div>`);
+  renderSide();
+  window.scrollTo(0,0);
+}
+function upNext(v){
+  const same = state.videos.filter(x=>x.id!==v.id && x.show===v.show);
+  const cat = state.videos.filter(x=>x.id!==v.id && x.cat===v.cat && x.show!==v.show);
+  const rest = homeFeed().filter(x=>x.id!==v.id && x.cat!==v.cat);
+  return [...same,...cat,...rest].slice(0,14);
+}
+function renderWatch(id){
+  const v=byId(id); if(!v){ go("browse","home"); return; }
+  if(timeIsUp()){ go("browse","home"); return; }
+  const liked = state.liked.includes(id);
+  const nx = upNext(v);
+  $("#main").innerHTML = `<div class="watch">
+    <div class="wl">
+      <div class="player"><div id="yt"></div>
+        <div class="cover" id="cover" hidden></div>
+      </div>
+      <div class="wt">${esc(v.t)}</div>
+      <div class="wbar">
+        <div class="wch"><div class="chav" style="background:${color(v)}">${esc(v.show[0])}</div><b>${esc(v.show)}</b></div>
+        <button class="pill ${liked?"on":""}" id="like">👍 ${liked?"Liked":"Like"}</button>
+      </div>
+    </div>
+    <div class="wr">${nx.map(x=>`<button class="up" data-id="${x.id}">
+      <div class="thumb"><img loading="lazy" src="${thumbUrl(x.id)}" alt="">${progPct(x.id)>2?`<div class="prog" style="width:${progPct(x.id)}%"></div>`:""}</div>
+      <div><p class="mt">${esc(x.t)}</p><div class="ms">${esc(x.show)}</div></div></button>`).join("")}</div>
+  </div>`;
+  renderSide();
+  window.scrollTo(0,0);
+  state.history = [id, ...state.history.filter(h=>h!==id)].slice(0,60); save();
+  $("#like").onclick=()=>{
+    const on=state.liked.includes(id);
+    state.liked = on? state.liked.filter(x=>x!==id) : [id,...state.liked]; save();
+    $("#like").classList.toggle("on",!on); $("#like").textContent = on?"👍 Like":"👍 Liked";
+  };
+  startPlayer(v, nx);
+}
+
+/* ---------- player ---------- */
+let apiReady=false, pending=null;
+window.onYouTubeIframeAPIReady=()=>{ apiReady=true; if(pending){ const p=pending; pending=null; startPlayer(...p); } };
+(function(){ const s=document.createElement("script"); s.src="https://www.youtube.com/iframe_api"; document.head.appendChild(s); })();
+
+function showCover(kind, v, nx){
+  const c=$("#cover"); if(!c) return;
+  if(kind==="paused"){
+    c.innerHTML=`<button class="big" id="resume" aria-label="Play"><svg width="44" height="44" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#fff"/></svg></button>`;
+    c.querySelector("#resume").onclick=()=>{ player&&player.playVideo(); };
+  } else if(kind==="ended"){
+    c.innerHTML=`<h3>What do you want to watch next?</h3><div class="row">${nx.slice(0,3).map(x=>
+      `<button class="nx" data-id="${x.id}"><img src="${thumbUrl(x.id)}" alt=""><span>${esc(x.t)}</span></button>`).join("")}</div>
+      <button class="pill" id="again">↺ Watch again</button>`;
+    c.querySelector("#again").onclick=()=>{ player.seekTo(0); player.playVideo(); };
+  } else if(kind==="oops"){
+    c.innerHTML=`<h3>Oops! This one won't play.</h3><button class="pill" id="home2">Go back home</button>`;
+    c.querySelector("#home2").onclick=()=>go("browse","home");
+  } else if(kind==="done"){
+    c.innerHTML=`<h3>All done for today. See you tomorrow!</h3>`;
+  }
+  c.hidden=false;
+}
+function hideCover(){ const c=$("#cover"); if(c) c.hidden=true; }
+
+function startPlayer(v, nx){
+  if(!apiReady){ pending=[v,nx]; return; }
+  stopPlayer();
+  const p=state.prog[v.id]; let start=0;
+  if(p && p.t>10 && (!p.d || p.t < p.d-20)) start=Math.floor(p.t);
+  player = new YT.Player("yt",{
+    videoId:v.id,
+    playerVars:{autoplay:1, start, rel:0, modestbranding:1, iv_load_policy:3, playsinline:1, fs:1, disablekb:0, cc_load_policy:0},
+    events:{
+      onStateChange:e=>{
+        if(e.data===1) hideCover();
+        else if(e.data===2) showCover("paused",v,nx);
+        else if(e.data===0){ state.prog[v.id]={t:0,d:0}; save(); showCover("ended",v,nx); }
+      },
+      onError:()=>showCover("oops",v,nx)
+    }
+  });
+  tick=setInterval(()=>{
+    if(!player||!player.getPlayerState) return;
+    if(player.getPlayerState()===1){
+      addUsed(2);
+      const t=player.getCurrentTime(), d=player.getDuration();
+      if(d) { state.prog[v.id]={t,d}; save(); }
+      if(timeIsUp()){ player.pauseVideo(); showCover("done",v,nx); }
+    }
+  },2000);
+}
+function stopPlayer(){ clearInterval(tick); tick=null; if(player&&player.destroy){ try{player.destroy()}catch(e){} } player=null; }
+
+/* ---------- navigation ---------- */
+function go(name, arg){
+  view = name==="watch"? {name, id:arg, cat:view.cat} : {name, cat:arg||"home"};
+  if(name==="watch") renderWatch(arg); else renderBrowse();
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-id],[data-cat]");
+  if(!b || b.closest("#dlg")) return;
+  if(b.dataset.id) go("watch", b.dataset.id);
+  else go("browse", b.dataset.cat);
+});
+$("#logo").onclick=()=>go("browse","home");
+$("#burger").onclick=()=>$("#side").classList.toggle("mini");
+
+/* ---------- parents (press and hold the gear for 1.5 s) ---------- */
+let holdT=null;
+const gear=$("#gear");
+const startHold=e=>{ e.preventDefault(); gear.classList.add("holding"); holdT=setTimeout(()=>{ gear.classList.remove("holding"); openParents(); },1500); };
+const endHold=()=>{ clearTimeout(holdT); gear.classList.remove("holding"); };
+gear.addEventListener("pointerdown",startHold);
+["pointerup","pointerleave","pointercancel"].forEach(ev=>gear.addEventListener(ev,endHold));
+
+function parseId(s){
+  s=s.trim(); if(/^[\w-]{11}$/.test(s)) return s;
+  const m=s.match(/(?:v=|youtu\.be\/|embed\/|shorts\/|live\/)([\w-]{11})/); return m?m[1]:null;
+}
+function openParents(){
+  if(player&&player.pauseVideo) player.pauseVideo();
+  const d=$("#dlg"); d.hidden=false;
+  const counts = Object.keys(CAT_PT).map(k=>`${CAT_PT[k]}: ${state.videos.filter(v=>v.cat===k).length}`).join(" · ");
+  d.innerHTML=`<div class="panel" role="dialog" aria-label="Área dos pais">
+    <div class="frow" style="justify-content:space-between"><h3>Área dos pais</h3><button class="btn ghost" id="pclose">Fechar</button></div>
+    <p class="hint">${state.videos.length} vídeos. ${counts}</p>
+
+    <h4>Adicionar vídeo</h4>
+    <div class="frow">
+      <input type="text" id="addUrl" placeholder="Link do YouTube">
+      <input type="text" id="addTitle" placeholder="Título (opcional)" style="min-width:160px;flex:.6">
+      <select id="addCat">${Object.entries(CAT_PT).map(([k,l])=>`<option value="${k}">${l}</option>`).join("")}</select>
+      <button class="btn" id="addBtn">Adicionar</button>
+    </div>
+    <p class="hint">Vídeos com Ms Rachel ou Blippi no título ou no nome do canal são recusados.</p>
+
+    <h4>Vídeos</h4>
+    <div class="list" id="plist">${state.videos.map(v=>`<div class="li"><img src="${thumbUrl(v.id)}" alt="">
+      <div class="tx">${esc(v.t)}<br><small>${esc(v.show)} · ${CAT_PT[v.cat]||v.cat}</small></div>
+      <button class="x" data-rm="${v.id}" aria-label="Remover">✕</button></div>`).join("")}</div>
+
+    <h4>Limite por dia (opcional)</h4>
+    <div class="frow"><input type="number" id="mins" min="0" max="180" step="5" value="${state.minutes}" style="width:90px"> minutos
+      <button class="btn ghost" id="saveMins">Salvar</button><button class="btn ghost" id="resetDay">Zerar hoje</button></div>
+    <p class="hint">0 = sem limite (padrão). Hoje: ${Math.floor(getUsed()/60)} min assistidos, contando só o tempo com vídeo rodando.</p>
+
+    <h4>Outros</h4>
+    <div class="frow">
+      <button class="btn ghost" id="fs">Tela cheia</button>
+      <button class="btn ghost" id="restore">Restaurar a lista inicial</button>
+    </div>
+    <div class="frow" id="confirmRow" hidden style="margin-top:8px"><span>Isso troca a lista atual pela inicial. Curtidas e histórico ficam.</span>
+      <button class="btn warn" id="restoreYes">Restaurar</button><button class="btn ghost" id="restoreNo">Cancelar</button></div>
+  </div>`;
+  const close=()=>{ d.hidden=true; d.innerHTML=""; if(view.name==="browse") renderBrowse(); };
+  $("#pclose").onclick=close;
+  d.onclick=e=>{ if(e.target===d) close(); };
+  $("#addBtn").onclick=()=>{
+    const id=parseId($("#addUrl").value);
+    if(!id){ toast("Não reconheci esse link."); return; }
+    if(byId(id)){ toast("Esse vídeo já está na lista."); return; }
+    const t=$("#addTitle").value.trim()||"New video", cat=$("#addCat").value;
+    if(BLOCKED.test(t)){ toast("Esse vídeo foi recusado pelo filtro."); return; }
+    state.videos.unshift({id,t,ch:"",show:t.split(/[-–|]/)[0].trim().slice(0,30)||"Video",cat}); save(); toast("Adicionado."); openParents();
+  };
+  $("#plist").onclick=e=>{ const b=e.target.closest("[data-rm]"); if(!b) return;
+    state.videos=state.videos.filter(v=>v.id!==b.dataset.rm); save(); b.closest(".li").remove(); };
+  $("#saveMins").onclick=()=>{ const v=parseInt($("#mins").value,10); state.minutes=isNaN(v)?0:Math.max(0,Math.min(180,v)); save(); toast("Salvo."); };
+  $("#resetDay").onclick=()=>{ try{localStorage.removeItem(dayKey())}catch(e){} toast("Contagem de hoje zerada."); };
+  $("#fs").onclick=()=>{ const r=document.documentElement.requestFullscreen; if(r) document.documentElement.requestFullscreen().catch(()=>toast("O navegador não deixou entrar em tela cheia.")); close(); };
+  $("#restore").onclick=()=>{ $("#confirmRow").hidden=false; };
+  $("#restoreNo").onclick=()=>{ $("#confirmRow").hidden=true; };
+  $("#restoreYes").onclick=()=>{ state.videos=STARTER.slice(); save(); toast("Lista inicial restaurada."); openParents(); };
+}
+
+renderBrowse();
+</script>
+</body>
+</html>
